@@ -10,5 +10,5 @@ Este es un sistema de gestión desarrollado en Django.
 ## Instrucciones de instalación
 1. Clona el repositorio:
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
+   git clone <https://github.com/UserNanno/Dynamus_Project>
    cd Dynamus_Project
