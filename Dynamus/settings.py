@@ -64,6 +64,8 @@ DATABASES = {
     }
 }
 
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/Lima'
 USE_I18N = True
