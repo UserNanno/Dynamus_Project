@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dynamus{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        button {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Sistema de Gestión Dynamus</h1>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                {% if user.is_admin %}
+                <li><a href="{% url 'lista_socios' %}">Socios</a></li>
+                {% endif %}
+                {% if user.is_socio %}
+                <li><a href="{% url 'subir_documento' %}">Subir Documentos</a></li>
+                <li><a href="{% url 'mis_documentos' %}">Mis Documentos</a></li>
+                {% endif %}
+                <li>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Contenido de cada vista -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2024 Dynamus. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>

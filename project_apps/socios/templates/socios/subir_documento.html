@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Subir Documento{% endblock %}
+
+{% block content %}
+<h2>Subir Documento</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" style="background-color: #4CAF50; color: white;">Subir</button>
+</form>
+<a href="{% url 'dashboard_socio' %}" style="margin-top: 1rem; display: block;">Volver al Dashboard</a>
+{% endblock %}

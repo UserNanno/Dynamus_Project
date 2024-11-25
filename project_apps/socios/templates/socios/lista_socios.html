@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Socios{% endblock %}
+
+{% block content %}
+<h2>Lista de Socios</h2>
+<a href="{% url 'crear_socio' %}" style="color: #4CAF50; font-weight: bold;">Agregar Nuevo Socio</a>
+
+<table border="1" cellspacing="0" cellpadding="10" style="width: 100%; margin-top: 1rem;">
+    <thead>
+        <tr>
+            <th>Número de Padrón</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for socio in socios %}
+        <tr>
+            <td>{{ socio.numero_padron }}</td>
+            <td>{{ socio.nombre }}</td>
+            <td>{{ socio.apellido }}</td>
+            <td>{{ socio.dni }}</td>
+            <td>
+                <!-- Botones para editar y eliminar (puedes agregar vistas específicas para estas acciones) -->
+                <a href="#">Editar</a> |
+                <a href="#">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center;">No hay socios registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Paginación -->
+<div style="margin-top: 1rem; text-align: center;">
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <div>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

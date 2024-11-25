@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulario de Socio{% endblock %}
+
+{% block content %}
+<h2>Formulario de Socio</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"
+        style="background-color: #4CAF50; color: white; padding: 0.5rem 1rem; border: none; cursor: pointer;">
+        Guardar
+    </button>
+    <a href="{% url 'lista_socios' %}" style="margin-left: 1rem; color: #4CAF50; text-decoration: none;">
+        Regresar a la Lista
+    </a>
+</form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio de Sesión{% endblock %}
+
+{% block content %}
+<div
+    style="max-width: 400px; margin: 0 auto; padding: 2rem; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #4CAF50;">Inicio de Sesión</h2>
+
+    <!-- Mostrar errores de inicio de sesión -->
+    {% if form.non_field_errors %}
+    <div style="color: red; margin-bottom: 1rem;">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <!-- Formulario -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"
+            style="width: 100%; background-color: #4CAF50; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;">
+            Iniciar sesión
+        </button>
+    </form>
+
+</div>
+{% endblock %}

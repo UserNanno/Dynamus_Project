@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<h2>Confirmar Eliminación</h2>
+<p>¿Estás seguro de que deseas eliminar al socio {{ object }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit"
+        style="background-color: red; color: white; padding: 0.5rem 1rem; border: none; cursor: pointer;">Sí,
+        eliminar</button>
+    <a href="{% url 'lista_socios' %}" style="margin-left: 1rem; color: gray; text-decoration: none;">Cancelar</a>
+</form>
+{% endblock %}

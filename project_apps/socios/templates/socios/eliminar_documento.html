@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Documento{% endblock %}
+
+{% block content %}
+<h2>¿Estás seguro de que deseas eliminar este documento?</h2>
+<p>Tipo de Documento: {{ object.get_tipo_documento_display }}</p>
+<p>Archivo: {{ object.archivo.name }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" style="background-color: red; color: white;">Eliminar</button>
+    <a href="{% url 'mis_documentos' %}" style="margin-left: 1rem;">Cancelar</a>
+</form>
+{% endblock %}
