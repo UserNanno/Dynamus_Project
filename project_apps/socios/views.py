@@ -5,6 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404, redirect
 from .models import Socio, DocumentoSocio
 from django.contrib.auth.models import User, Group  # Importa Group para roles
+from django.http import Http404
+
+from project_apps.socios import models
 
 class ListaSociosView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     """Vista para administradores: lista de socios."""
@@ -77,13 +80,18 @@ class SocioDashboardView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        socio = get_object_or_404(Socio, dni=self.request.user.username)
-        queryset = DocumentoSocio.objects.filter(socio=socio)
-
+        queryset = super().get_queryset()
         search_query = self.request.GET.get('search', '')
         if search_query:
-            queryset = queryset.filter(tipo_documento__icontains=search_query)
+            queryset = queryset.filter(
+                models.Q(dni__icontains=search_query) |
+                models.Q(nombre__icontains=search_query) |
+                models.Q(apellido__icontains=search_query) |
+                models.Q(numero_padron__icontains=search_query) |
+                models.Q(placa__icontains=search_query)
+            )
         return queryset
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -122,6 +130,71 @@ class EliminarDocumentoView(LoginRequiredMixin, DeleteView):
         # Asegúrate de que el usuario solo pueda eliminar sus propios documentos
         socio = get_object_or_404(Socio, dni=self.request.user.username)
         return self.model.objects.filter(socio=socio)
+
+class EditarDocumentoView(LoginRequiredMixin, UpdateView):
+    """Vista para reemplazar un documento."""
+    model = DocumentoSocio
+    template_name = 'socios/editar_documento.html'
+    fields = ['tipo_documento', 'archivo']
+    success_url = reverse_lazy('mis_documentos')
+
+    def get_queryset(self):
+        # Asegúrate de que el usuario solo pueda editar sus propios documentos
+        socio = get_object_or_404(Socio, dni=self.request.user.username)
+        return self.model.objects.filter(socio=socio)
+
+class EditarSocioView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Socio
+    template_name = 'socios/editar_socio.html'
+    fields = ['numero_padron', 'dni', 'nombre', 'apellido', 'placa', 'telefono', 'direccion']
+    success_url = reverse_lazy('lista_socios')
+
+    def test_func(self):
+        return self.request.user.is_admin()
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect('dashboard_socio')
+        return redirect('login')
+
+class EliminarSocioView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Socio
+    template_name = 'socios/eliminar_socio.html'
+    success_url = reverse_lazy('lista_socios')
+
+    def get_object(self, queryset=None):
+        try:
+            socio = super().get_object(queryset)
+            print(f"Eliminando socio: {socio}")  # Debugging
+            return socio
+        except Socio.DoesNotExist:
+            raise Http404("El socio que intentas eliminar no existe.")
+
+    def test_func(self):
+        return self.request.user.is_admin()
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect('dashboard_socio')
+        return redirect('login')
+
+class VerDocumentosView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = DocumentoSocio
+    template_name = 'socios/ver_documentos.html'
+    context_object_name = 'documentos'
+
+    def get_queryset(self):
+        # Filtra los documentos que pertenecen al socio actual
+        socio = get_object_or_404(Socio, pk=self.kwargs['pk'])
+        return DocumentoSocio.objects.filter(socio=socio)
+
+    def test_func(self):
+        return self.request.user.is_admin()  # Solo administradores pueden acceder
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect('dashboard_socio')  # Redirige si no es admin
+        return redirect('login')
 
 class EditarDocumentoView(LoginRequiredMixin, UpdateView):
     """Vista para reemplazar un documento."""

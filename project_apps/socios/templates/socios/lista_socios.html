@@ -3,50 +3,56 @@
 {% block title %}Lista de Socios{% endblock %}
 
 {% block content %}
-<h2>Lista de Socios</h2>
-<a href="{% url 'crear_socio' %}" style="color: #4CAF50; font-weight: bold;">Agregar Nuevo Socio</a>
+<div class="container mt-4">
+    <h2>Lista de Socios</h2>
+    <a href="{% url 'crear_socio' %}" class="btn btn-success mb-3">Agregar Nuevo Socio</a>
 
-<table border="1" cellspacing="0" cellpadding="10" style="width: 100%; margin-top: 1rem;">
-    <thead>
-        <tr>
-            <th>Número de Padrón</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>DNI</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for socio in socios %}
-        <tr>
-            <td>{{ socio.numero_padron }}</td>
-            <td>{{ socio.nombre }}</td>
-            <td>{{ socio.apellido }}</td>
-            <td>{{ socio.dni }}</td>
-            <td>
-                <!-- Botones para editar y eliminar (puedes agregar vistas específicas para estas acciones) -->
-                <a href="#">Editar</a> |
-                <a href="#">Eliminar</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5" style="text-align: center;">No hay socios registrados.</td>
-        </tr>
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control"
+                placeholder="Buscar por DNI, Nombre, Apellido, Padrón o Placa">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th><a href="?order_by=numero_padron" class="text-white">Número de Padrón</a></th>
+                <th><a href="?order_by=nombre" class="text-white">Nombre</a></th>
+                <th><a href="?order_by=apellido" class="text-white">Apellido</a></th>
+                <th><a href="?order_by=dni" class="text-white">DNI</a></th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for socio in socios %}
+            <tr>
+                <td>{{ socio.numero_padron }}</td>
+                <td>{{ socio.nombre }}</td>
+                <td>{{ socio.apellido }}</td>
+                <td>{{ socio.dni }}</td>
+                <td>
+                    <a href="{% url 'editar_socio' socio.id %}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{% url 'eliminar_socio' socio.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    <a href="{% url 'ver_documentos' socio.id %}" class="btn btn-info btn-sm">Ver Documentos</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No hay socios registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mt-3">
+        {% for page in page_obj.paginator.page_range %}
+        <a href="?page={{ page }}"
+            class="btn {% if page == page_obj.number %}btn-primary{% else %}btn-outline-primary{% endif %} mx-1">
+            {{ page }}
+        </a>
         {% endfor %}
-    </tbody>
-</table>
-
-<!-- Paginación -->
-<div style="margin-top: 1rem; text-align: center;">
-    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-    <div>
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-        {% endif %}
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

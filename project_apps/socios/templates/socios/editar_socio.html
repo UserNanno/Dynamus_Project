@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Socio{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Socio</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="margin-top: 20px;">
+            <button type="submit"
+                style="background-color: blue; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                Guardar
+            </button>
+            <a href="{% url 'lista_socios' %}"
+                style="background-color: gray; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

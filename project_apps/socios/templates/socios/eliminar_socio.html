@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-danger">Confirmar Eliminación</h2>
+    <p>¿Estás seguro de que deseas eliminar al socio
+        <strong>{{ object.nombre }} {{ object.apellido }}</strong>
+        (N° de Padrón: {{ object.numero_padron }})?
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit"
+            style="background-color: red; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+            Eliminar
+        </button>
+        <a href="{% url 'lista_socios' %}"
+            style="background-color: gray; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+            Cancelar
+        </a>
+    </form>
+
+</div>
+{% endblock %}
