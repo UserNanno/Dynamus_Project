@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from django.core.management import execute_from_command_line
 
 
 def main():
@@ -15,6 +16,12 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
+        # Ejecutar script de creación de superusuario después de las migraciones
+    if "migrate" in sys.argv:
+        from project_apps.users.create_superuser import run
+        run()
+
     execute_from_command_line(sys.argv)
 
 
