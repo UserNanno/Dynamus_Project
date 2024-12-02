@@ -19,7 +19,7 @@ def main():
 
         # Ejecutar script de creación de superusuario después de las migraciones
     if "migrate" in sys.argv:
-        from project_apps.users.create_superuser import run
+        from project_apps.users.create_admin_user import run
         run()
 
     execute_from_command_line(sys.argv)
