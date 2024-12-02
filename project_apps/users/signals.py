@@ -1,11 +1,14 @@
+from django.db.models.signals import post_migrate
+from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from project_apps.socios.models import Socio, DocumentoSocio
 
-User = get_user_model()
+@receiver(post_migrate)
+def create_admin_user(sender, **kwargs):
+    User = get_user_model()
 
-def run():
     # Datos del nuevo usuario administrador
     username = "root"
     email = "root@gmail.com"
